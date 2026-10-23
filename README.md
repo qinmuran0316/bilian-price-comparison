@@ -97,7 +97,7 @@ npm start
 ```bash
 npm run build
 # 已生成 userscript/dist/bilian.user.js  106.3 KB
-# 模块 7 个 · 站点规则 13 条 · 版本 1.1.0
+# 模块 7 个 · 站点规则 13 条 · 版本 1.1.1
 ```
 
 Tampermonkey → 添加新脚本 → 粘贴 `userscript/dist/bilian.user.js` 全文 → 保存。脚本默认连 `http://127.0.0.1:8787`，在面板「设置」里可以改。
@@ -316,7 +316,7 @@ npm run test:userscript
 ```bash
 # 服务活着
 curl "http://127.0.0.1:8787/api/health"
-# {"ok":true,"version":"1.1.0","mode":"hybrid","providers":{"active":["mock","collected"],...}}
+# {"ok":true,"version":"1.1.1","mode":"hybrid","providers":{"active":["mock","collected"],...}}
 
 # 搜索 + 价格排序
 curl "http://127.0.0.1:8787/api/search?keyword=%E7%BD%97%E6%8A%80G304&sort=jiage&limit=5"

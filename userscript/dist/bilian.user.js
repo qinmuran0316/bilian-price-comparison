@@ -2,8 +2,8 @@
 // @name               全网比价助手 · 淘宝/天猫/京东/拼多多/唯品会
 // @name:zh            全网比价助手 · 淘宝/天猫/京东/拼多多/唯品会
 // @namespace          bilian.local
-// @version            1.1.0
-// @author             bilian
+// @version            1.1.1
+// @author             qinmuran
 // @description        商详页自动识别商品，跨淘宝、天猫、京东、拼多多、唯品会比价；显示隐藏优惠券、到手价、历史价格，支持按人气/销量/价格搜索。覆盖聚划算、天猫超市、天猫国际、京东国际、京东图书、京东电子书、京东工业品、京东大药房。
 // @description:zh     商详页自动识别商品，跨淘宝、天猫、京东、拼多多、唯品会比价；显示隐藏优惠券、到手价、历史价格，支持按人气/销量/价格搜索。覆盖聚划算、天猫超市、天猫国际、京东国际、京东图书、京东电子书、京东工业品、京东大药房。
 // @license            MIT
@@ -60,7 +60,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  var VERSION = '1.1.0';
+  var VERSION = '1.1.1';
   var DAY_MS = 86400000;
 
   function round2(n) {
