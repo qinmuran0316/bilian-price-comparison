@@ -1,0 +1,24 @@
+{
+  "name": "bilian",
+  "version": "1.1.0",
+  "private": true,
+  "description": "跨平台电商比价：聚合后端 + Tampermonkey 用户脚本",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "node userscript/build.js",
+    "test": "node test/run-all.js",
+    "test:core": "node test/test-core.js",
+    "test:extract": "node test/test-extract.js",
+    "test:history": "node test/test-history.js",
+    "test:server": "node test/test-server.js",
+    "test:userscript": "node test/test-userscript.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^24.1.3"
+  }
+}

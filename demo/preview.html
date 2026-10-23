@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>比价助手 · 面板预览</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #f4f5f7; color: #1f2329;
+    font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  .topbar { height: 40px; background: #fff; border-bottom: 1px solid #eceef2; display: flex; align-items: center; padding: 0 28px; gap: 18px; color: #6b7280; font-size: 12px; }
+  .topbar b { color: #e1251b; font-size: 15px; letter-spacing: .5px; }
+  .wrap { max-width: 1180px; margin: 22px auto 0; padding: 0 24px; display: grid; grid-template-columns: 420px 1fr; gap: 26px; }
+  .gallery { background: #fff; border: 1px solid #eceef2; border-radius: 12px; padding: 24px; }
+  .gallery .shot {
+    height: 320px; border-radius: 10px; background: linear-gradient(140deg,#eef1f6,#dfe4ec);
+    display: flex; align-items: center; justify-content: center; color: #98a2b3; font-size: 13px; letter-spacing: 1px;
+  }
+  .thumbs { display: flex; gap: 8px; margin-top: 12px; }
+  .thumbs i { width: 54px; height: 54px; border-radius: 7px; background: #eef1f6; border: 1px solid #e6e9ef; }
+  .info h1 { font-size: 21px; line-height: 1.5; margin: 6px 0 10px; font-weight: 600; }
+  .info .sub { color: #8b93a1; font-size: 12px; margin-bottom: 16px; }
+  .pricebox { background: #fff; border: 1px solid #eceef2; border-radius: 12px; padding: 16px 20px; }
+  .pricebox .row { display: flex; align-items: baseline; gap: 10px; }
+  .pricebox .label { color: #8b93a1; font-size: 12px; }
+  .pricebox .now { color: #e1251b; font-size: 32px; font-weight: 700; }
+  .pricebox .now small { font-size: 16px; }
+  .pricebox .old { color: #b0b7c3; text-decoration: line-through; font-size: 13px; }
+  .pricebox .tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .pricebox .tags span { font-size: 11px; color: #e1251b; background: #fff1f0; border: 1px solid #ffd6d1; border-radius: 4px; padding: 2px 7px; }
+  .services { margin-top: 16px; display: flex; gap: 22px; color: #6b7280; font-size: 12px; flex-wrap: wrap; }
+  .caption { position: fixed; left: 24px; bottom: 18px; color: #98a2b3; font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="topbar"><b>京东</b><span>首页</span><span>手机数码</span><span>电脑办公</span><span>鼠标</span></div>
+  <div class="wrap">
+    <div class="gallery">
+      <div class="shot">商品主图占位</div>
+      <div class="thumbs"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="info">
+      <h1>罗技（Logitech）G304 无线鼠标 游戏鼠标 轻量化 黑色</h1>
+      <div class="sub">罗技京东自营旗舰店 · 累计评价 42 万+ · 京东物流</div>
+      <div class="pricebox">
+        <div class="row"><span class="label">京东价</span><span class="now"><small>¥</small>199.00</span><span class="old">¥259.00</span></div>
+        <div class="tags"><span>满 199 减 20</span><span>白条 12 期免息</span><span>以旧换新</span></div>
+        <div class="services"><span>✔ 七天无理由</span><span>✔ 京东发货</span><span>✔ 全国联保</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="caption">预览页：模拟京东商详页，右侧面板由 userscript/build.js 产物实时渲染</div>
+
+  <script src="../userscript/dist/bilian.user.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    if (!window.BL || !BL.ui) { document.body.insertAdjacentHTML('beforeend', '<p style="color:red">BL 未加载</p>'); return; }
+
+    var items = [
+      { platform:'pdd', platformName:'拼多多', title:'罗技 G304 无线鼠标 电竞宏编程 官方标配', price:179, originPrice:259, coupon:10, couponThreshold:179, finalPrice:169, couponDesc:'满179减10', shop:'百亿补贴官方店', salesText:'3.2万', matchScore:96, url:'#', mock:false, channel:'' },
+      { platform:'taobao', platformName:'淘宝', title:'罗技 G304 无线鼠标 黑色 旗舰款', price:189, originPrice:249, coupon:5, couponThreshold:189, finalPrice:184, couponDesc:'满189减5', shop:'优选生活旗舰店', salesText:'6.3万', matchScore:93, url:'#', mock:false, channel:'聚划算' },
+      { platform:'tmall', platformName:'天猫', title:'罗技 G304 无线游戏鼠标 升级版', price:205, originPrice:269, coupon:20, couponThreshold:205, finalPrice:185, couponDesc:'满205减20', shop:'天猫超市', salesText:'1.6万', matchScore:91, url:'#', mock:false, channel:'天猫超市' },
+      { platform:'jd', platformName:'京东', title:'罗技（Logitech）G304 无线鼠标 游戏鼠标 轻量化 黑色', price:199, originPrice:259, coupon:0, couponThreshold:0, finalPrice:199, couponDesc:'', shop:'罗技京东自营旗舰店', salesText:'42万', matchScore:100, isCurrent:true, url:'#', mock:false, channel:'京东自营' },
+      { platform:'vip', platformName:'唯品会', title:'罗技 G304 无线鼠标 套装组合', price:195, originPrice:239, coupon:0, couponThreshold:0, finalPrice:195, couponDesc:'', shop:'唯品自营', salesText:'8600', matchScore:88, url:'#', mock:false, channel:'' }
+    ];
+
+    var coupons = [
+      { platform:'tmall', platformName:'天猫', amount:20, threshold:205, desc:'满205减20', price:205, finalPrice:185, rate:9.76, end:'2026-11-02', url:'#' },
+      { platform:'pdd', platformName:'拼多多', amount:10, threshold:179, desc:'满179减10', price:179, finalPrice:169, rate:5.59, end:'2026-10-31', url:'#' },
+      { platform:'taobao', platformName:'淘宝', amount:5, threshold:189, desc:'满189减5', price:189, finalPrice:184, rate:2.65, end:'2026-10-30', url:'#' }
+    ];
+
+    var history = [
+      { t: 1, p: 219 }, { t: 2, p: 209 }, { t: 3, p: 215 }, { t: 4, p: 199 }, { t: 5, p: 189 }, { t: 6, p: 199 }
+    ];
+
+    // 180 天演示序列：围绕 199 波动，618 有个坑，末点钉在当前价
+    var hisPoints = [];
+    (function () {
+      var now = Date.now();
+      var seed = 20261024;
+      var cur = 239;
+      function rnd() {
+        seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+        return seed / 4294967296;
+      }
+      for (var i = 179; i >= 0; i--) {
+        var t = now - i * 86400000;
+        var d = new Date(t);
+        var md = (d.getMonth() + 1) * 100 + d.getDate();
+        var drift = (rnd() - 0.5) * 0.034;
+        if (md === 618) drift -= 0.14;
+        if (md >= 1101 && md <= 1111) drift -= 0.09;
+        if (md === 815) drift -= 0.05;
+        cur = cur * (1 + drift) + (199 - cur) * 0.014;
+        hisPoints.push({ t: t, p: Math.round(cur * 100) / 100 });
+      }
+      hisPoints[hisPoints.length - 1] = { t: now, p: 199 };
+    })();
+    var hisStats = BL.core.buildHistoryStats(hisPoints, 199, 180);
+    var hisAdvice = BL.core.historyAdvice(hisStats);
+    var startTab = new URLSearchParams(location.search).get('tab') || 'compare';
+
+    var state = {
+      site: { platform:'jd', platformName:'京东', channel:'京东自营' },
+      item: { platform:'jd', platformName:'京东', title:'罗技（Logitech）G304 无线鼠标 游戏鼠标 轻量化 黑色', price:199, originPrice:259, itemId:'100012043978', channel:'京东自营', image:'', url:'#' },
+      status: 'ready',
+      statusText: '',
+      error: '',
+      tab: startTab,
+      keyword: '罗技 G304 无线鼠标',
+      sort: 'renqi',
+      platform: 'all',
+      searchStatus: 'idle',
+      searchResult: null,
+      history: {
+        ok: true,
+        key: 'jd:100012043978',
+        days: 180,
+        points: hisPoints,
+        stats: hisStats,
+        advice: hisAdvice,
+        source: 'manmanbuy',
+        mock: false,
+        note: '',
+        realPoints: 180
+      },
+      historyStatus: 'ready',
+      historyError: '',
+      historyDays: 180,
+      apiBase: 'http://127.0.0.1:8787',
+      auto: true,
+      health: { ok:true, version:'1.1.0', mode:'hybrid', stats:{ collected: 128 }, providers:{ active:['taobao','jd','collected'] } },
+      collapsed: false,
+      closed: false,
+      panelPos: { right: 24, top: 84 },
+      result: {
+        best: items[0],
+        savings: { amount: 30, percent: 15.1, from: 'jd', to: 'pdd' },
+        items: items,
+        coupons: coupons,
+        history: hisPoints,
+        historyStats: hisStats,
+        stats: { candidates: 34, matched: 5, elapsedMs: 186, providers: [] },
+        note: '',
+        mock: false
+      }
+    };
+
+    var ui;
+    function noop() {}
+    ui = BL.ui.mount({
+      initial: state,
+      onRefresh: noop,
+      onTab: function (tab) { state.tab = tab; ui.render(state); },
+      onRange: function (d) { state.historyDays = d; state.history.days = d; ui.render(state); },
+      onHistoryRefresh: noop,
+      onSearch: function (kw) { state.keyword = kw; state.tab = 'search'; state.searchStatus = 'ready'; state.searchResult = { total: 5, summary: { lowest: { platformName:'拼多多', min:169 } }, list: items }; ui.render(state); },
+      onSort: function (sort) { state.sort = sort; ui.render(state); },
+      onPlatform: function (p) { state.platform = p; ui.render(state); },
+      onCollapse: function (v) { state.collapsed = v; ui.render(state); },
+      onClose: function (force) { state.closed = force === false ? false : !state.closed; ui.render(state); },
+      onSave: function (cfg) { state.apiBase = cfg.apiBase; ui.render(state); },
+      onMove: noop
+    });
+    ui.render(state);
+
+    // 截图用：?hover=1 时自动把鼠标停在曲线上，展示 tooltip
+    if (new URLSearchParams(location.search).get('hover')) {
+      setTimeout(function () {
+        var host = document.getElementById('bl-root');
+        var chart = host && host.shadowRoot && host.shadowRoot.getElementById('bl-chart');
+        var svg = chart && chart.querySelector('svg');
+        if (!svg) return;
+        var rect = svg.getBoundingClientRect();
+        chart.dispatchEvent(new MouseEvent('mousemove', {
+          bubbles: true,
+          clientX: rect.left + rect.width * 0.58,
+          clientY: rect.top + 50
+        }));
+      }, 400);
+    }
+  })();
+  </script>
+</body>
+</html>
