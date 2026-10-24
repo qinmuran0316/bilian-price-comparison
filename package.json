@@ -1,6 +1,6 @@
 {
   "name": "bilian",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "description": "跨平台电商比价：聚合后端 + Tampermonkey 用户脚本",
   "main": "server/index.js",

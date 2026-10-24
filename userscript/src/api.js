@@ -6,11 +6,23 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (root) {
   'use strict';
 
-  var base = 'http://127.0.0.1:8787';
+  var DEFAULT_BASE = 'http://127.0.0.1:8787';
+  var base = DEFAULT_BASE;
   var timeout = 15000;
 
+  // 脚本只服务于本机聚合服务，限制回环地址，避免被改成远端地址后悄悄外发浏览数据
+  function isLoopback(url) {
+    try {
+      var host = new URL(String(url || '')).hostname.toLowerCase();
+      return host === '127.0.0.1' || host === 'localhost' || host === '::1' || host === '[::1]';
+    } catch (err) {
+      return false;
+    }
+  }
+
   function setBase(url) {
-    base = String(url || '').replace(/\/+$/, '') || base;
+    var next = String(url || '').replace(/\/+$/, '');
+    base = isLoopback(next) ? next : DEFAULT_BASE;
   }
 
   function full(path) {
@@ -105,6 +117,7 @@
 
   return {
     setBase: setBase,
+    isLoopback: isLoopback,
     getBase: function () { return base; },
     setTimeout: function (ms) { timeout = ms; },
     health: function () { return get('/api/health'); },

@@ -111,6 +111,14 @@ async function main() {
   const code = fs.readFileSync(path.join(__dirname, '..', 'userscript', 'dist', 'bilian.user.js'), 'utf8');
   assert.ok(code.includes('// ==UserScript=='), '打包产物缺少元数据头');
 
+  // 脚本站审核规则：权限最小化、描述不堆关键词、首页可访问
+  const header = code.split('// ==/UserScript==')[0];
+  assert.ok(!/@connect\s+\*/.test(header), '@connect 不允许通配符');
+  assert.ok(header.includes('// @tag'), '缺少 @tag 标签');
+  assert.ok(/@description\s+\S/.test(header), '缺少脚本描述');
+  assert.ok(!header.includes('聚划算'), '@description 不应堆关键词');
+  assert.ok(/@homepageURL\s+https:\/\//.test(header), '@homepageURL 必须是公开地址');
+
   try {
     w.eval(code);
 
@@ -208,6 +216,16 @@ async function main() {
       assert.ok(sh().querySelector('.bl-hist-meta').textContent.includes('史低'));
     });
 
+    await t('比价页提供跨平台同款搜索入口', async () => {
+      await waitFor(() => sh().querySelector('[data-act="open"][data-url*="s.taobao.com"]'), 4000);
+      const urls = Array.from(sh().querySelectorAll('.bl-chips [data-act="open"]'))
+        .map((el) => el.getAttribute('data-url'));
+      assert.ok(urls.length >= 3, '平台入口太少: ' + urls.length);
+      assert.ok(urls.every((u) => u.startsWith('https://')), urls.join(' | '));
+      // 当前平台是京东，不应重复给京东入口
+      assert.ok(!urls.some((u) => u.includes('search.jd.com')), urls.join(' | '));
+    });
+
     await t('走势页：拉取历史价并画出 SVG 曲线', async () => {
       click(sh().querySelector('[data-tab="trend"]'));
       await waitFor(() => sh().querySelector('.bl-hero-v'), 8000);
@@ -280,6 +298,34 @@ async function main() {
       sh().querySelector('#bl-auto').checked = false;
       click(sh().querySelector('[data-act="save"]'));
       await waitFor(() => prefs.auto === false, 2000);
+    });
+
+    await t('设置页拒绝非本机后端地址', async () => {
+      const input = sh().querySelector('#bl-api');
+      input.value = 'http://example.com:8787';
+      click(sh().querySelector('[data-act="save"]'));
+      await new Promise((r) => setTimeout(r, 300));
+      assert.strictEqual(prefs.apiBase, base, '远端地址不应被保存');
+      assert.ok(sh().querySelector('.bl-toast').textContent.includes('本机'), '缺少地址限制提示');
+      input.value = base;
+    });
+
+    await t('后端不可用时仍提供各平台同款搜索入口', async () => {
+      const input = sh().querySelector('#bl-api');
+      input.value = 'http://127.0.0.1:1';
+      click(sh().querySelector('[data-act="save"]'));
+      await new Promise((r) => setTimeout(r, 200));
+      click(sh().querySelector('[data-tab="compare"]'));
+      click(sh().querySelector('[data-act="refresh"]'));
+      await waitFor(() => sh().querySelector('.bl-err'), 8000);
+      const urls = Array.from(sh().querySelectorAll('.bl-chips [data-act="open"]'))
+        .map((el) => el.getAttribute('data-url'));
+      assert.ok(urls.length >= 3, '离线时缺少平台入口: ' + urls.length);
+      click(sh().querySelector('[data-tab="settings"]'));
+      await waitFor(() => sh().querySelector('#bl-api'), 3000);
+      sh().querySelector('#bl-api').value = base;
+      click(sh().querySelector('[data-act="save"]'));
+      await new Promise((r) => setTimeout(r, 200));
     });
 
     await t('上报接口收到页面采集数据', async () => {

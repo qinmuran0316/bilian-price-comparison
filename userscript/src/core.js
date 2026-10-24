@@ -12,7 +12,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  var VERSION = '1.1.1';
+  var VERSION = '1.1.2';
   var DAY_MS = 86400000;
 
   function round2(n) {

@@ -43,7 +43,7 @@ function parseTime(v) {
 function pickArray(payload) {
   if (Array.isArray(payload)) return payload;
   if (!payload || typeof payload !== 'object') return [];
-  // 参考脚本格式 { data: { his: [...] } }
+  // 旧版比价接口常见格式 { data: { his: [...] } }
   if (payload.data && Array.isArray(payload.data.his)) return payload.data.his;
   if (Array.isArray(payload.data)) return payload.data;
   if (payload.data && Array.isArray(payload.data.list)) return payload.data.list;

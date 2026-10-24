@@ -84,7 +84,7 @@ async function history(input, cfg, ctx) {
     errors: series.errors,
     note: series.note,
     elapsedMs: Date.now() - t0,
-    // 兼容按参考脚本字段取数的调用方
+    // 兼容旧版比价接口的字段命名
     data: {
       max: stats.min ? stats.max.price : 0,
       min: stats.min ? stats.min.price : 0,

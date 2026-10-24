@@ -1,13 +1,18 @@
 // ==UserScript==
-// @name               全网比价助手 · 淘宝/天猫/京东/拼多多/唯品会
-// @name:zh            全网比价助手 · 淘宝/天猫/京东/拼多多/唯品会
-// @namespace          bilian.local
-// @version            1.1.1
+// @name               全网比价助手
+// @name:zh            全网比价助手
+// @namespace          https://github.com/qinmuran0316/bilian-price-comparison
+// @version            1.1.2
 // @author             qinmuran
-// @description        商详页自动识别商品，跨淘宝、天猫、京东、拼多多、唯品会比价；显示隐藏优惠券、到手价、历史价格，支持按人气/销量/价格搜索。覆盖聚划算、天猫超市、天猫国际、京东国际、京东图书、京东电子书、京东工业品、京东大药房。
-// @description:zh     商详页自动识别商品，跨淘宝、天猫、京东、拼多多、唯品会比价；显示隐藏优惠券、到手价、历史价格，支持按人气/销量/价格搜索。覆盖聚划算、天猫超市、天猫国际、京东国际、京东图书、京东电子书、京东工业品、京东大药房。
+// @description        在商品详情页显示比价面板：本机服务启动时查看同款价格、隐藏券和历史价，未启动时跳转各平台搜索同款。数据只发送到本机 127.0.0.1，不上传。
+// @description:zh     在商品详情页显示比价面板：本机服务启动时查看同款价格、隐藏券和历史价，未启动时跳转各平台搜索同款。数据只发送到本机 127.0.0.1，不上传。
 // @license            MIT
-// @homepageURL        http://127.0.0.1:8787/
+// @homepageURL        https://github.com/qinmuran0316/bilian-price-comparison
+// @supportURL         https://github.com/qinmuran0316/bilian-price-comparison/issues
+// @tag                比价
+// @tag                购物
+// @tag                优惠券
+// @tag                历史价格
 // @match              *://*.taobao.com/*
 // @match              *://*.tmall.com/*
 // @match              *://*.tmall.hk/*
@@ -40,7 +45,6 @@
 // @grant              unsafeWindow
 // @connect            127.0.0.1
 // @connect            localhost
-// @connect            *
 // @run-at             document-idle
 // @noframes
 // ==/UserScript==
@@ -60,7 +64,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  var VERSION = '1.1.1';
+  var VERSION = '1.1.2';
   var DAY_MS = 86400000;
 
   function round2(n) {
@@ -1271,11 +1275,23 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (root) {
   'use strict';
 
-  var base = 'http://127.0.0.1:8787';
+  var DEFAULT_BASE = 'http://127.0.0.1:8787';
+  var base = DEFAULT_BASE;
   var timeout = 15000;
 
+  // 脚本只服务于本机聚合服务，限制回环地址，避免被改成远端地址后悄悄外发浏览数据
+  function isLoopback(url) {
+    try {
+      var host = new URL(String(url || '')).hostname.toLowerCase();
+      return host === '127.0.0.1' || host === 'localhost' || host === '::1' || host === '[::1]';
+    } catch (err) {
+      return false;
+    }
+  }
+
   function setBase(url) {
-    base = String(url || '').replace(/\/+$/, '') || base;
+    var next = String(url || '').replace(/\/+$/, '');
+    base = isLoopback(next) ? next : DEFAULT_BASE;
   }
 
   function full(path) {
@@ -1370,6 +1386,7 @@
 
   return {
     setBase: setBase,
+    isLoopback: isLoopback,
     getBase: function () { return base; },
     setTimeout: function (ms) { timeout = ms; },
     health: function () { return get('/api/health'); },
@@ -1824,6 +1841,21 @@
 
     var chartGeom = null;
 
+    var SEARCH_PLATFORMS = ['taobao', 'tmall', 'jd', 'pdd', 'vip'];
+
+    // 后端没启动或没查到同款时，至少把用户送到其它平台的同款搜索结果
+    function sameItemSearch(keyword, current) {
+      var kw = String(keyword || '').trim();
+      if (!kw) return '';
+      var btns = SEARCH_PLATFORMS.filter(function (p) { return p !== current; }).map(function (p) {
+        var url = core.buildSearchUrl(p, kw);
+        return url ? '<button class="bl-chip" data-act="open" data-url="' + esc(url) + '">' +
+          esc(core.platformName(p)) + '</button>' : '';
+      }).join('');
+      if (!btns) return '';
+      return '<div class="bl-sec">去其它平台搜同款</div><div class="bl-chips">' + btns + '</div>';
+    }
+
     function sourceText(h) {
       var map = { local: '本地采样', mixed: '历史源 + 本地采样', mock: '演示数据', none: '无' };
       if (h.source === 'manmanbuy') return '慢慢买历史价';
@@ -1986,9 +2018,11 @@
         return '<div class="bl-err">' + esc(s.error || '比价失败') +
           '<div style="margin-top:8px;color:#8b93a1;font-size:11px">后端没起来？在项目目录执行 <code>node server/index.js</code></div>' +
           '<div class="bl-row-btns"><button class="bl-btn pri" data-act="refresh">重试</button>' +
-          '<button class="bl-btn" data-act="tab" data-tab="settings">检查设置</button></div></div>';
+          '<button class="bl-btn" data-act="tab" data-tab="settings">检查设置</button></div></div>' +
+          sameItemSearch(s.item && s.item.title, s.site && s.site.platform);
       }
       var html = renderItemCard(s.item);
+      html += sameItemSearch(s.item && s.item.title, s.site && s.site.platform);
       if (!s.result) {
         return html + '<div class="bl-empty">' + (s.item ? '点右上角 ↻ 开始比价' : '') + '</div>';
       }
@@ -2044,7 +2078,8 @@
         return html;
       }
       if (s.searchStatus === 'error') {
-        html += '<div class="bl-err">' + esc(s.searchError || '搜索失败') + '</div>';
+        html += '<div class="bl-err">' + esc(s.searchError || '搜索失败') + '</div>' +
+          sameItemSearch(s.keyword, '');
         return html;
       }
       var res = s.searchResult;
@@ -2096,14 +2131,14 @@
           '<div class="bl-kv"><span>数据源</span><b>' + esc((h.providers && h.providers.active || []).join(' / ') || 'none') + '</b></div>';
       }
       return '<div class="bl-setting">' +
-        '<div class="bl-field"><label>后端地址</label>' +
+        '<div class="bl-field"><label>后端地址（仅限本机）</label>' +
           '<input id="bl-api" class="bl-input" type="text" value="' + esc(s.apiBase || '') + '" placeholder="http://127.0.0.1:8787">' +
         '</div>' +
         '<label class="bl-check"><input id="bl-auto" type="checkbox"' + (s.auto ? ' checked' : '') + '> 打开商详页自动比价</label>' +
         '<div class="bl-row-btns"><button class="bl-btn pri" data-act="save">保存并测试</button>' +
           '<button class="bl-btn" data-act="refresh">重新识别</button></div>' +
         (healthRows ? '<div class="bl-sec">服务状态</div>' + healthRows : '<div class="bl-sec">服务状态 · 未连接</div>') +
-        '<div class="bl-sec" style="line-height:1.7">面板数据来自本地聚合服务。未配置联盟密钥时展示模拟价，接口字段与真实数据一致；配置后自动切换。改动后端地址后需点保存。</div>' +
+        '<div class="bl-sec" style="line-height:1.7">只允许 127.0.0.1 / localhost。面板数据来自本机聚合服务，采集到的商品标题、价格和链接只写入本机，不会上传到其它服务器。未配置联盟密钥时展示模拟价并标注「模拟」。</div>' +
       '</div>';
     }
 
@@ -2540,6 +2575,8 @@
     state.closed = Boolean(store.get('closed'));
     state.panelPos = store.get('panelPos') || { right: 18, top: 96 };
     api.setBase(state.apiBase);
+    // 旧配置可能存了远端地址，这里回落到本机默认值并同步显示
+    state.apiBase = api.getBase();
   }
 
   function mount(item) {
@@ -2600,6 +2637,10 @@
         var base = String(cfg.apiBase || '').replace(/\/+$/, '');
         if (!/^https?:\/\/[^\s]+$/.test(base)) {
           ui.toast('地址格式不对，要 http:// 开头');
+          return;
+        }
+        if (!api.isLoopback(base)) {
+          ui.toast('只允许本机地址（127.0.0.1 或 localhost）');
           return;
         }
         state.apiBase = base;

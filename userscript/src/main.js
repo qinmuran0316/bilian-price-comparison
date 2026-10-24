@@ -229,6 +229,8 @@
     state.closed = Boolean(store.get('closed'));
     state.panelPos = store.get('panelPos') || { right: 18, top: 96 };
     api.setBase(state.apiBase);
+    // 旧配置可能存了远端地址，这里回落到本机默认值并同步显示
+    state.apiBase = api.getBase();
   }
 
   function mount(item) {
@@ -289,6 +291,10 @@
         var base = String(cfg.apiBase || '').replace(/\/+$/, '');
         if (!/^https?:\/\/[^\s]+$/.test(base)) {
           ui.toast('地址格式不对，要 http:// 开头');
+          return;
+        }
+        if (!api.isLoopback(base)) {
+          ui.toast('只允许本机地址（127.0.0.1 或 localhost）');
           return;
         }
         state.apiBase = base;

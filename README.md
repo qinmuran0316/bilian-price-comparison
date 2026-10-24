@@ -45,7 +45,7 @@
 │  │  ├─ ui.js                 Shadow DOM 面板：比价 / 走势 / 搜索 / 券 / 设置
 │  │  └─ main.js               入口、SPA 路由监听、自动上报
 │  ├─ build.js                 按依赖顺序拼接 + vm 语法校验
-│  └─ dist/bilian.user.js      构建产物（106 KB）
+│  └─ dist/bilian.user.js      构建产物（109 KB）
 ├─ test/
 │  ├─ test-core.js             36 项：价格、标题归一、相似度、排序、ID、频道
 │  ├─ test-extract.js          15 项：四级降级、频道页判定、异常页面
@@ -96,11 +96,11 @@ npm start
 
 ```bash
 npm run build
-# 已生成 userscript/dist/bilian.user.js  106.3 KB
-# 模块 7 个 · 站点规则 13 条 · 版本 1.1.1
+# 已生成 userscript/dist/bilian.user.js  109.3 KB
+# 模块 7 个 · 站点规则 13 条 · 版本 1.1.2
 ```
 
-Tampermonkey → 添加新脚本 → 粘贴 `userscript/dist/bilian.user.js` 全文 → 保存。脚本默认连 `http://127.0.0.1:8787`，在面板「设置」里可以改。
+Tampermonkey → 添加新脚本 → 粘贴 `userscript/dist/bilian.user.js` 全文 → 保存。脚本默认连 `http://127.0.0.1:8787`，面板「设置」里只能改成本机地址（`127.0.0.1` / `localhost`）和端口；商品标题、价格、链接只写入本机服务，脚本不会向其它服务器发送数据。后端未启动时，面板仍会提供各平台的同款搜索入口。
 
 ## 支持站点
 
@@ -243,7 +243,7 @@ GET  /core.js            共享核心（控制台画图用同一份 code）
 }
 ```
 
-最后那个 `data` 字段是给按参考脚本后端格式取数的调用方留的兼容层，`his[].updatetime` 是 `YYYY-MM-DD`。
+最后那个 `data` 字段是给按旧版比价接口格式取数的调用方留的兼容层，`his[].updatetime` 是 `YYYY-MM-DD`。
 
 `sort` 取值：`renqi`（销量 75% + 评价 25%）、`xiaoliang`（销量降序）、`jiage`（到手价升序）。
 
@@ -316,7 +316,7 @@ npm run test:userscript
 ```bash
 # 服务活着
 curl "http://127.0.0.1:8787/api/health"
-# {"ok":true,"version":"1.1.1","mode":"hybrid","providers":{"active":["mock","collected"],...}}
+# {"ok":true,"version":"1.1.2","mode":"hybrid","providers":{"active":["mock","collected"],...}}
 
 # 搜索 + 价格排序
 curl "http://127.0.0.1:8787/api/search?keyword=%E7%BD%97%E6%8A%80G304&sort=jiage&limit=5"
