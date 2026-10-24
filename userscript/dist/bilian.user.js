@@ -2,10 +2,10 @@
 // @name               全网比价助手
 // @name:zh            全网比价助手
 // @namespace          https://github.com/qinmuran0316/bilian-price-comparison
-// @version            1.1.2
+// @version            1.1.3
 // @author             qinmuran
-// @description        在商品详情页显示比价面板：本机服务启动时查看同款价格、隐藏券和历史价，未启动时跳转各平台搜索同款。数据只发送到本机 127.0.0.1，不上传。
-// @description:zh     在商品详情页显示比价面板：本机服务启动时查看同款价格、隐藏券和历史价，未启动时跳转各平台搜索同款。数据只发送到本机 127.0.0.1，不上传。
+// @description        商详页自动识别商品，跨淘宝、天猫、京东、拼多多、唯品会比价；显示隐藏优惠券、到手价、历史价格，支持按人气/销量/价格搜索。覆盖聚划算、天猫超市、天猫国际、京东国际、京东图书、京东电子书、京东工业品、京东大药房。
+// @description:zh     商详页自动识别商品，跨淘宝、天猫、京东、拼多多、唯品会比价；显示隐藏优惠券、到手价、历史价格，支持按人气/销量/价格搜索。覆盖聚划算、天猫超市、天猫国际、京东国际、京东图书、京东电子书、京东工业品、京东大药房。
 // @license            MIT
 // @homepageURL        https://github.com/qinmuran0316/bilian-price-comparison
 // @supportURL         https://github.com/qinmuran0316/bilian-price-comparison/issues
@@ -64,7 +64,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  var VERSION = '1.1.2';
+  var VERSION = '1.1.3';
   var DAY_MS = 86400000;
 
   function round2(n) {
