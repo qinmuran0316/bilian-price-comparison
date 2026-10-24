@@ -608,7 +608,7 @@
       }
       if (s.status === 'error') {
         return '<div class="bl-err">' + esc(s.error || '比价失败') +
-          '<div style="margin-top:8px;color:#8b93a1;font-size:11px">后端没起来？在项目目录执行 <code>node server/index.js</code></div>' +
+          '<div style="margin-top:8px;color:#8b93a1;font-size:11px">本机比价服务未连接，可先用下方入口去其它平台搜同款</div>' +
           '<div class="bl-row-btns"><button class="bl-btn pri" data-act="refresh">重试</button>' +
           '<button class="bl-btn" data-act="tab" data-tab="settings">检查设置</button></div></div>' +
           sameItemSearch(s.item && s.item.title, s.site && s.site.platform);

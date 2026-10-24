@@ -2,10 +2,10 @@
 // @name               全网比价助手
 // @name:zh            全网比价助手
 // @namespace          https://github.com/qinmuran0316/bilian-price-comparison
-// @version            1.1.3
+// @version            1.1.4
 // @author             qinmuran
-// @description        商详页自动识别商品，跨淘宝、天猫、京东、拼多多、唯品会比价；显示隐藏优惠券、到手价、历史价格，支持按人气/销量/价格搜索。覆盖聚划算、天猫超市、天猫国际、京东国际、京东图书、京东电子书、京东工业品、京东大药房。
-// @description:zh     商详页自动识别商品，跨淘宝、天猫、京东、拼多多、唯品会比价；显示隐藏优惠券、到手价、历史价格，支持按人气/销量/价格搜索。覆盖聚划算、天猫超市、天猫国际、京东国际、京东图书、京东电子书、京东工业品、京东大药房。
+// @description        在淘宝、天猫、京东、拼多多、唯品会商品页识别当前商品，一键跳转各平台搜同款；连接本机服务后可查看同款价格、隐藏券和历史价。需自行运行配套本机服务，数据不出本机。
+// @description:zh     在淘宝、天猫、京东、拼多多、唯品会商品页识别当前商品，一键跳转各平台搜同款；连接本机服务后可查看同款价格、隐藏券和历史价。需自行运行配套本机服务，数据不出本机。
 // @license            MIT
 // @homepageURL        https://github.com/qinmuran0316/bilian-price-comparison
 // @supportURL         https://github.com/qinmuran0316/bilian-price-comparison/issues
@@ -64,7 +64,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  var VERSION = '1.1.3';
+  var VERSION = '1.1.4';
   var DAY_MS = 86400000;
 
   function round2(n) {
@@ -2016,7 +2016,7 @@
       }
       if (s.status === 'error') {
         return '<div class="bl-err">' + esc(s.error || '比价失败') +
-          '<div style="margin-top:8px;color:#8b93a1;font-size:11px">后端没起来？在项目目录执行 <code>node server/index.js</code></div>' +
+          '<div style="margin-top:8px;color:#8b93a1;font-size:11px">本机比价服务未连接，可先用下方入口去其它平台搜同款</div>' +
           '<div class="bl-row-btns"><button class="bl-btn pri" data-act="refresh">重试</button>' +
           '<button class="bl-btn" data-act="tab" data-tab="settings">检查设置</button></div></div>' +
           sameItemSearch(s.item && s.item.title, s.site && s.site.platform);

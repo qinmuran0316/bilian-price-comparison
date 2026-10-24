@@ -96,11 +96,11 @@ npm start
 
 ```bash
 npm run build
-# 已生成 userscript/dist/bilian.user.js  109.5 KB
-# 模块 7 个 · 站点规则 13 条 · 版本 1.1.3
+# 已生成 userscript/dist/bilian.user.js  109.4 KB
+# 模块 7 个 · 站点规则 13 条 · 版本 1.1.4
 ```
 
-Tampermonkey → 添加新脚本 → 粘贴 `userscript/dist/bilian.user.js` 全文 → 保存。脚本默认连 `http://127.0.0.1:8787`，面板「设置」里只能改成本机地址（`127.0.0.1` / `localhost`）和端口；商品标题、价格、链接只写入本机服务，脚本不会向其它服务器发送数据。后端未启动时，面板仍会提供各平台的同款搜索入口。
+Tampermonkey → 添加新脚本 → 粘贴 `userscript/dist/bilian.user.js` 全文 → 保存。脚本默认连 `http://127.0.0.1:8787`，面板「设置」里只能改成本机地址（`127.0.0.1` / `localhost`）和端口；采集到的商品标题、价格、链接只写入本机服务，脚本不会向其它服务器发送数据。后端未启动时，面板仍会提供各平台的同款搜索入口。
 
 ## 支持站点
 
@@ -316,7 +316,7 @@ npm run test:userscript
 ```bash
 # 服务活着
 curl "http://127.0.0.1:8787/api/health"
-# {"ok":true,"version":"1.1.3","mode":"hybrid","providers":{"active":["mock","collected"],...}}
+# {"ok":true,"version":"1.1.4","mode":"hybrid","providers":{"active":["mock","collected"],...}}
 
 # 搜索 + 价格排序
 curl "http://127.0.0.1:8787/api/search?keyword=%E7%BD%97%E6%8A%80G304&sort=jiage&limit=5"

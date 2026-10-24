@@ -116,6 +116,7 @@ async function main() {
   assert.ok(!/@connect\s+\*/.test(header), '@connect 不允许通配符');
   assert.ok(header.includes('// @tag'), '缺少 @tag 标签');
   assert.ok(/@description\s+\S/.test(header), '缺少脚本描述');
+  assert.ok(!header.includes('聚划算'), '@description 不应堆渠道关键词');
   assert.ok(/@homepageURL\s+https:\/\//.test(header), '@homepageURL 必须是公开地址');
 
   try {
